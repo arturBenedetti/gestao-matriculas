@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Linha agregada do CSV INEP (uma linha = curso × IES × modalidade com contagens por ano).
+model MatriculaLinha {
+  id                      Int     @id @default(autoincrement())
+  estado                  String
+  cidade                  String
+  ies                     String
+  sigla                   String
+  organizacao             String
+  categoriaAdministrativa String  @map("categoria_administrativa")
+  /// Derivado: true se categoria indica rede pública (federal/estadual/municipal).
+  publica                 Boolean
+  nomeCurso               String  @map("nome_curso")
+  nomeDetalhadoCurso      String  @map("nome_detalhado_curso")
+  modalidade              String
+  grau                    String
+  y2014                   Int?    @map("y2014")
+  y2015                   Int?    @map("y2015")
+  y2016                   Int?    @map("y2016")
+  y2017                   Int?    @map("y2017")
+  y2018                   Int?    @map("y2018")
+  y2019                   Int?    @map("y2019")
+  y2020                   Int?    @map("y2020")
+  y2021                   Int?    @map("y2021")
+  y2022                   Int?    @map("y2022")
+
+  @@index([modalidade])
+  @@index([publica])
+  @@index([modalidade, publica])
+  @@map("matricula_linha")
+}

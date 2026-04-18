@@ -1,0 +1,1 @@
+{"version":3,"file":"LoggingDashboardObserver.d.ts","sourceRoot":"","sources":["../../../src/infrastructure/observers/LoggingDashboardObserver.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,QAAQ,EAAE,MAAM,mCAAmC,CAAC;AAClE,OAAO,KAAK,EAAE,iBAAiB,EAAE,MAAM,uCAAuC,CAAC;AAE/E,yGAAyG;AACzG,qBAAa,wBAAyB,YAAW,QAAQ,CAAC,iBAAiB,CAAC;IAC1E,MAAM,CAAC,IAAI,EAAE,iBAAiB,GAAG,IAAI;CAStC"}

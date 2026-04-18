@@ -1,0 +1,35 @@
+{
+  "name": "gestao-de-matriculas",
+  "version": "1.0.0",
+  "main": "dist/main.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc && npx @tailwindcss/cli -i ./src/view/input.css -o ./dist/view/output.css && node scripts/copy-view.mjs",
+    "dev": "npm run build && electron .",
+    "postinstall": "prisma generate",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:reset": "prisma migrate reset"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "Graduação — Região Sul: matrículas (Electron + MVVM + Prisma + PostgreSQL)",
+  "dependencies": {
+    "@prisma/client": "^6.19.0",
+    "dotenv": "^16.6.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.2.2",
+    "@types/node": "^22.19.0",
+    "electron": "^41.2.1",
+    "prisma": "^6.19.0",
+    "tailwindcss": "^4.2.2",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  }
+}

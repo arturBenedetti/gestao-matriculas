@@ -1,4 +1,4 @@
-import "dotenv/config";
+import { config as loadEnv } from "dotenv";
 import { app, BrowserWindow, ipcMain } from "electron";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -9,6 +9,8 @@ import { IpcDashboardObserver } from "./infrastructure/observers/IpcDashboardObs
 import { LoggingDashboardObserver } from "./infrastructure/observers/LoggingDashboardObserver.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+// Carrega .env da raiz do projeto (não depende do cwd do processo, como atalhos ou Explorer).
+loadEnv({ path: join(__dirname, "..", ".env") });
 const prisma = new PrismaClient();
 const repository = new PrismaMatriculaRepository(prisma);
 const dashboardViewModel = new DashboardViewModel(repository);
@@ -39,7 +41,26 @@ function createWindow() {
     void win.loadFile(join(__dirname, "view", "index.html"));
     return win;
 }
-app.whenReady().then(() => {
+async function logDatabaseHealth() {
+    try {
+        await prisma.$connect();
+        const countRows = await prisma.$queryRaw `SELECT COUNT(*)::bigint AS n FROM "matricula_linha"`;
+        const n = countRows[0]?.n ?? 0n;
+        console.log(`[DB] Conexão OK — matricula_linha: ${n.toString()} linha(s).`);
+        const mods = await prisma.$queryRaw `
+      SELECT DISTINCT "Modalidade" AS m FROM "matricula_linha" WHERE "Modalidade" IS NOT NULL ORDER BY 1 LIMIT 12
+    `;
+        const sample = mods.map((x) => x.m).filter(Boolean);
+        if (sample.length) {
+            console.log(`[DB] Exemplos de "Modalidade" no banco: ${sample.join(" | ")}`);
+        }
+    }
+    catch (e) {
+        console.error("[DB] Falha ao conectar ou ler matricula_linha:", e);
+    }
+}
+app.whenReady().then(async () => {
+    await logDatabaseHealth();
     registerDashboardIpc();
     createWindow();
 });

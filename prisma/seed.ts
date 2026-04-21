@@ -54,7 +54,7 @@ function mapColumns(parts: string[]): LinhaInsert | null {
     sigla: sigla.trim(),
     organizacao: organizacao.trim(),
     categoriaAdministrativa: categoriaAdministrativa.trim(),
-    publica: isPublica(categoriaAdministrativa),
+    publica: isPublica(categoriaAdministrativa) ? "Sim" : "Não",
     nomeCurso: nomeCurso.trim(),
     nomeDetalhadoCurso: nomeDetalhadoCurso.trim(),
     modalidade: modalidade.trim(),

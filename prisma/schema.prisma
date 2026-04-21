@@ -8,20 +8,21 @@ datasource db {
 }
 
 /// Linha agregada do CSV INEP (uma linha = curso × IES × modalidade com contagens por ano).
+/// Colunas alinhadas ao DDL criado no Supabase (identificadores com maiúsculas / espaços).
 model MatriculaLinha {
   id                      Int     @id @default(autoincrement())
-  estado                  String
-  cidade                  String
-  ies                     String
-  sigla                   String
-  organizacao             String
-  categoriaAdministrativa String  @map("categoria_administrativa")
-  /// Derivado: true se categoria indica rede pública (federal/estadual/municipal).
-  publica                 Boolean
-  nomeCurso               String  @map("nome_curso")
-  nomeDetalhadoCurso      String  @map("nome_detalhado_curso")
-  modalidade              String
-  grau                    String
+  estado                  String? @map("Estado")
+  cidade                  String? @map("Cidade")
+  ies                     String? @map("IES")
+  sigla                   String? @map("Sigla")
+  organizacao             String? @map("Organização")
+  categoriaAdministrativa String? @map("Categoria Administrativa")
+  /// TEXT no banco; no seed usamos "Sim" / "Não" para filtrar rankings por setor.
+  publica                 String? @map("Pública")
+  nomeCurso               String? @map("Nome do Curso")
+  nomeDetalhadoCurso      String? @map("Nome Detalhado do Curso")
+  modalidade              String? @map("Modalidade")
+  grau                    String? @map("Grau")
   y2014                   Int?    @map("y2014")
   y2015                   Int?    @map("y2015")
   y2016                   Int?    @map("y2016")
@@ -32,8 +33,5 @@ model MatriculaLinha {
   y2021                   Int?    @map("y2021")
   y2022                   Int?    @map("y2022")
 
-  @@index([modalidade])
-  @@index([publica])
-  @@index([modalidade, publica])
   @@map("matricula_linha")
 }

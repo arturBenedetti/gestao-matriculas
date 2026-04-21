@@ -45,7 +45,7 @@ export class PrismaMatriculaRepository {
         SUM(COALESCE("y2021", 0))::bigint AS "y2021",
         SUM(COALESCE("y2022", 0))::bigint AS "y2022"
       FROM "matricula_linha"
-      WHERE "modalidade" = ${filtro}
+      WHERE "Modalidade" = ${filtro}
     `;
         const r = rows[0];
         if (!r) {
@@ -65,10 +65,10 @@ export class PrismaMatriculaRepository {
     }
     async getRankingCursos2022(modalidade) {
         const rows = await this.prisma.$queryRaw `
-      SELECT "nome_curso" AS nome_curso, SUM(COALESCE("y2022", 0))::bigint AS total
+      SELECT "Nome do Curso" AS nome_curso, SUM(COALESCE("y2022", 0))::bigint AS total
       FROM "matricula_linha"
-      WHERE "modalidade" = ${modalidade}
-      GROUP BY "nome_curso"
+      WHERE "Modalidade" = ${modalidade}
+      GROUP BY "Nome do Curso"
       ORDER BY total DESC
       LIMIT 10
     `;
@@ -79,12 +79,22 @@ export class PrismaMatriculaRepository {
         })));
     }
     async getRankingIes2022(modalidade, setor) {
-        const publica = setor === "publicas";
+        const publicaLabel = setor === "publicas" ? "Sim" : "Não";
         const rows = await this.prisma.$queryRaw `
-      SELECT "ies", "sigla", SUM(COALESCE("y2022", 0))::bigint AS total
+      SELECT "IES" AS ies, "Sigla" AS sigla, SUM(COALESCE("y2022", 0))::bigint AS total
       FROM "matricula_linha"
-      WHERE "modalidade" = ${modalidade} AND "publica" = ${publica}
-      GROUP BY "ies", "sigla"
+      WHERE "Modalidade" = ${modalidade}
+        AND (
+          (NULLIF(TRIM("Pública"), '') IS NOT NULL AND "Pública" = ${publicaLabel})
+          OR (
+            NULLIF(TRIM("Pública"), '') IS NULL
+            AND (
+              (${publicaLabel} = 'Sim' AND COALESCE("Categoria Administrativa", '') ~* 'pública')
+              OR (${publicaLabel} = 'Não' AND COALESCE("Categoria Administrativa", '') !~* 'pública')
+            )
+          )
+        )
+      GROUP BY "IES", "Sigla"
       ORDER BY total DESC
       LIMIT 10
     `;

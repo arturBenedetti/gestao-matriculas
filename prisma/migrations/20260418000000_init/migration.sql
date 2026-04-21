@@ -1,17 +1,18 @@
--- CreateTable
+DROP TABLE IF EXISTS "matricula_linha";
+
 CREATE TABLE "matricula_linha" (
     "id" SERIAL NOT NULL,
-    "estado" TEXT NOT NULL,
-    "cidade" TEXT NOT NULL,
-    "ies" TEXT NOT NULL,
-    "sigla" TEXT NOT NULL,
-    "organizacao" TEXT NOT NULL,
-    "categoria_administrativa" TEXT NOT NULL,
-    "publica" BOOLEAN NOT NULL,
-    "nome_curso" TEXT NOT NULL,
-    "nome_detalhado_curso" TEXT NOT NULL,
-    "modalidade" TEXT NOT NULL,
-    "grau" TEXT NOT NULL,
+    "Estado" TEXT,
+    "Cidade" TEXT,
+    "IES" TEXT,
+    "Sigla" TEXT,
+    "Organização" TEXT,
+    "Categoria Administrativa" TEXT,
+    "Pública" TEXT,
+    "Nome do Curso" TEXT,
+    "Nome Detalhado do Curso" TEXT,
+    "Modalidade" TEXT,
+    "Grau" TEXT,
     "y2014" INTEGER,
     "y2015" INTEGER,
     "y2016" INTEGER,
@@ -24,7 +25,3 @@ CREATE TABLE "matricula_linha" (
 
     CONSTRAINT "matricula_linha_pkey" PRIMARY KEY ("id")
 );
-
-CREATE INDEX "matricula_linha_modalidade_idx" ON "matricula_linha"("modalidade");
-CREATE INDEX "matricula_linha_publica_idx" ON "matricula_linha"("publica");
-CREATE INDEX "matricula_linha_modalidade_publica_idx" ON "matricula_linha"("modalidade", "publica");

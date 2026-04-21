@@ -61,10 +61,23 @@ function readFiltrosFromDom() {
     return { modalidadeTotais, setorIesPresencial, setorIesEad };
 }
 async function refreshFromUi() {
-    const filtros = readFiltrosFromDom();
-    await window.dashboardApi.refresh(filtros);
+    if (!window.dashboardApi)
+        return;
+    try {
+        const filtros = readFiltrosFromDom();
+        await window.dashboardApi.refresh(filtros);
+    }
+    catch (e) {
+        el("erro-global").textContent =
+            e instanceof Error ? e.message : String(e);
+    }
 }
 function init() {
+    if (!window.dashboardApi) {
+        el("erro-global").textContent =
+            "API do painel indisponível (preload não carregou). Rode npm run build e confira o terminal do Electron por erros de preload.";
+        return;
+    }
     const unsub = window.dashboardApi.onUpdate(applySnapshot);
     el("btn-aplicar-totais").addEventListener("click", () => {
         void refreshFromUi();
